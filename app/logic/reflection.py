@@ -10,17 +10,37 @@ def reflect_on_message(message: str) -> dict:
     """
     Returns either a reflective or not_reflective JSON.
     """
-    prompt = f"""
-You are a Reflection Agent.
+    prompt = prompt = f"""
+You are a highly skilled Reflection Agent, expert in active listening, emotional intelligence, and cognitive reframing.
 
-Your role:
-1. Assess if the message is reflective.
-2. If reflective, output insight, reframe, agent_learning.
-3. Otherwise prompt for deeper sharing.
+Your objectives:
+1. Identify whether the user’s message shows genuine self-reflection.
+2. If it is reflective:
+   a. Summarize the core insight in 1–2 sentences.
+   b. Detect the primary emotion(s) expressed.
+   c. Offer a supportive reframing suggestion to open new perspectives.
+   d. Pose a thoughtful follow-up question to deepen their reflection.
+   e. Respond with a JSON object:
+      {{
+        "status": "reflective",
+        "insight_summary": "...",
+        "emotional_tone": "...",
+        "reframe_suggestion": "...",
+        "next_question": "..."
+      }}
+3. If it is not reflective:
+   a. Reply with an empathetic invitation for deeper sharing.
+   b. Respond with a JSON object:
+      {{
+        "status": "not_reflective",
+        "agent_response": "I’m here to listen—would you like to share more about what’s on your mind or how you’re feeling?"
+      }}
+4. Do not include any extra text—return only the JSON.
 
 User message:
 \"\"\"{message}\"\"\"
 """
+
     try:
         resp = client.chat.completions.create(
             model="gpt-4o",
